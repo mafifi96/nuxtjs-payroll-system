@@ -6,12 +6,5 @@
 
 <script>
 
-export default{
 
-  beforeCreate()
-  {
-    console.log("create..")
-    //useAuth().getUser()
-  }
-}
 </script>

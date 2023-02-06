@@ -58,12 +58,12 @@
 
 <script>
     import {
-        useAuth
-    } from '~~/store/Auth'
+        useStore
+    } from '~~/store/Store'
 
     definePageMeta({
         layout: 'default',
-        middleware : ['auth']
+        middleware : ['guest']
     })
     
     import Errors from '~~/components/Errors.vue'
@@ -73,7 +73,7 @@
         data() {
             return {
                 title: useAppConfig().title,
-                user: useAuth().user,
+                user: useStore().user,
                 email: '',
                 password: '',
                 errors : [],
@@ -86,7 +86,7 @@
                 this.proccessing = true
                 
                     await $fetch('http://127.0.0.1:8000/sanctum/csrf-cookie')
-                    //console.log("csrf-cookie..")
+                    
                     await $fetch("http://127.0.0.1:8000/api/login", {
                         method: "post",
                         body: {
@@ -95,13 +95,10 @@
                         }
                     }).
                     then(res => {
-                        console.log("signing in..")
-                        //console.log(res)
-                        useAuth().signIn(res.data.token)
                         
+                        useStore().signIn(res.data.token)
+
                     }).catch(err => {
-                        //console.log(err.data.message)
-                        //console.log("error failed to logging in..")
                         
                         this.errors.push(err.data.message)
                     }).finally(()=>{
@@ -109,13 +106,7 @@
                     })
 
             }
-        },
-        /* watch : {
-            'useAuth().LoggedIn' : function()
-            {
-                console.log("changed")
-            }
-        } */
+        }
     }
 
 </script>
