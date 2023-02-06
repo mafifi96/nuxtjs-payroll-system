@@ -4,7 +4,7 @@
         <!-- side bar-->
         <div id="side-bar"
             class="fixed left-0 top-0 bg-gradient-to-b from-indigo-700 via-indigo-600 to-indigo-500 
-              h-full  lg:w-72 md:w-72 w-0 overflow-hidden py-1 transition-all duration-200 z-50">
+              h-full  lg:w-72 md:w-72 w-0 overflow-hidden py-1 transition-all duration-200 z-30">
             <div class="logo  px-3 text-left py-2 flex flex-1 items-center justify-between">
                 <!-- nav icon -->
                 <div>
@@ -19,12 +19,13 @@
                         <i class="fa fa-close"></i>
                     </button>
                 </div>
+                
 
             </div>
             <!-- nav menu-->
             <div class="px-2 py-6">
                 
-                <NuxtLink class="capitalize active block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs  text-slate-200 hover:text-slate-50 bg-indigo-800 rounded-md hover:bg-indigo-500 transition-all "
+                <NuxtLink class="capitalize  block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs  text-slate-200 hover:text-slate-50  rounded-md hover:bg-indigo-500 transition-all "
                     to="/dashboard">
                     <i class="fa fa-dashboard w-6 h-6 inline-block mr-1.5 -mt-1"></i>
                     <span>dashboard</span></NuxtLink>
@@ -39,7 +40,12 @@
                 <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/department">
                     <i class="fa fa-users w-6 h-6 inline-block mr-1.5 -mt-1"></i>
-                    <span >department</span></NuxtLink>
+                    <span >departments</span></NuxtLink>
+                    <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
+                    to="/position">
+                    <i class="fa fa-star-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
+                    <span >positions</span></NuxtLink>
+                    
                 <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/payrolls">
                     <i class="fa fa-credit-card w-6 h-6 inline-block mr-1.5 -mt-1"></i>
@@ -97,15 +103,22 @@
     </div>
     </template>
 <script setup>
-import {useAuth} from '~~/store/Auth'
+import {useStore} from '~~/store/Store'
+
 
 async function logout()
 {
-   await useAuth().logout()
+   await useStore().logout()
+   
 }
 
 </script>
 
 <style scoped>
-
+a.router-link-active {
+     --tw-bg-opacity: 1;
+    background-color: rgb(55 48 163 / var(--tw-bg-opacity));
+     
+    
+}
 </style>
