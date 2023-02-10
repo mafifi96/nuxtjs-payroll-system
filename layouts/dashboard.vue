@@ -37,9 +37,14 @@
                     to="/employee">
                     <i class="fa fa-user-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
                     <span>employee</span></NuxtLink>
+                    <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base  text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all text-xs"
+                    to="/contracts">
+                    <i class="fa fa-handshake-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
+                    <span>contracts</span></NuxtLink>
+                    
                 <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/department">
-                    <i class="fa fa-users w-6 h-6 inline-block mr-1.5 -mt-1"></i>
+                    <i class="fa fa-building-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
                     <span >departments</span></NuxtLink>
                     <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/position">

@@ -27,17 +27,25 @@
                         <th style="width:15%" class="cursor-pointer" @click="showEmployee()">employee</th>
                         <th style="width:15%">start</th>
                         <th style="width:15%">end</th>
+                        <th style="width:15%">status</th>
                         <th style="width:15%">created</th>
                         <th style="width:5%">action</th>
                     </tr>
                 </thead>
-                <tbody class=" text-xs font-sans font-semibold text-gray-700">
+
+                <tbody v-if="contracts.length == 0">
+                    <tr>
+                        <td colspan="8" class="text-center py-5">No contracts</td>
+                    </tr>
+                </tbody>
+                <tbody v-else class=" text-xs font-sans font-semibold text-gray-700">
                     <tr v-for="c,index in contracts" :key="index">
                         <td  class="font-semibold">{{ index+1 }}</td>
                         <td >{{ c.title }}</td>
                         <td >{{ c.employee?.name }}</td>
-                        <td >{{ c.start_date || 'Waiting..' }}</td>
+                        <td >{{ c.start_date }}</td>
                         <td >{{ c.end_date }}</td>
+                        <td >{{ c.is_working }}</td> 
                         <td >{{ c.created_at }}</td>
                         <td >
                             <div class="flex w-full h-fit justify-center items-center space-x-1">
