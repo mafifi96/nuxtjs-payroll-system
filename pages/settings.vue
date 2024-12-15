@@ -12,7 +12,9 @@
 </template>
 
 <script setup>
+import PageHeading from '~~/components/PageHeading.vue'    
 const {title} = useAppConfig()
+
 
     definePageMeta({
         layout: 'dashboard'

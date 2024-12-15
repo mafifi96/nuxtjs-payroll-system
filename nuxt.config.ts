@@ -1,6 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+  devtools : {enabled : false},
+
   app: {
     head: {
       charset: 'utf-8',
@@ -12,12 +14,17 @@ export default defineNuxtConfig({
       }],
     }
   },
+
   modules: [
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt'
-  ],
-  css: [
-    '~/assets/css/font-awesome.min.css',
+    
+    //'pinia-plugin-persistedstate/nuxt'
+    '@pinia/nuxt',
+    '@nuxt/ui',
   ],
 
+  css: [
+    '~/assets/css/font-awesome.min.css'
+  ],
+
+  compatibilityDate: '2024-11-12',
 })

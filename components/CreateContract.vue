@@ -83,6 +83,7 @@
 
                         </div>
 
+
                         <div class="p-3  flex justify-center items-center w-full">
                             <button @click.prevent="create()" :disabled="proccessing"
                                 class="bg-blue-500 block w-auto text-white px-6 rounded tracking-wide capitalize py-2 hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 transition-all font-semibold">{{proccessing ? 'storing...' : 'create'}}</button>
@@ -106,7 +107,7 @@
 
     import {
         useStore
-    } from '~~/store/Store'
+    } from '~~/store/store'
 
     const token = useStore().token
     const employee = ref({
@@ -167,6 +168,7 @@
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-type': 'application/json'
+                
             },
             body:{
                 name : employee.value.name
