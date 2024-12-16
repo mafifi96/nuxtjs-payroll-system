@@ -6,7 +6,7 @@
         </Title>
     </Head>
 
-<loader v-if="pending" />
+
     <div class="bg-white rounded p-3 text-center ">
         <h2 class="text-slate-600 capitalize font-semibold text-xl mb-3">positions
         </h2>
@@ -23,7 +23,7 @@
                         <option value="" selected>Select Department</option>
                         <option v-for="d in data.data.departments" :key="d.id" :value="d.id" >{{ d.name }}</option>
                     </select>
- 
+  
                     <input type="text" class="my-2 border w-full p-2 rounded-sm border-zinc-200" v-model="name"
                         placeholder="Name" required>
                     
@@ -45,7 +45,7 @@
                         <td style="width:10%">action</td>
                     </tr>
                 </thead>
-                 <tbody v-if="data.data.positions.length > 0">
+                  <tbody v-if="data.data.positions.length > 0">
                     <tr v-for="p,index in data.data.positions" :key="index">
                         <td  class="text-center">{{ index+1 }}</td>
                         <td >{{ p.name }}</td>
@@ -57,7 +57,7 @@
                                 @click="destroy(p.id)"><i class="fa fa-trash-o"></i></button></td>
                     </tr>
                 </tbody>
-                 
+                  
             </table>
 
         </div>
@@ -71,14 +71,16 @@
         ref
     } from 'vue';
     import Loader from '~~/components/Loader.vue'
+    import PageHeading from '~~/components/PageHeading.vue'    
+
 
     import {
         useStore
-    } from '~~/store/Store'
-    const token = useStore().token
+    } from '~~/store/store'
+    const {token} = useStore()
 
     const {
-        title
+        title,api
     } = useAppConfig()
 
     definePageMeta({
@@ -90,17 +92,18 @@
     const department = ref('')
     const proccessing = ref(false)
 
-        const {data , pending} = await useAsyncData('positions' , () => $fetch("http://127.0.0.1:8000/api/positions", {
+        const {data : data , refresh} = await useFetch(`${api}/positions` , {
+           
           headers: {
               'Authorization': `Bearer ${token}`
           }
-      }))
-      
+      }) 
+   
 
     async function create() {
         proccessing.value = true
 
-        await $fetch("http://127.0.0.1:8000/api/positions", {
+        await $fetch(`${api}/positions`, {
             method: 'post',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -115,9 +118,8 @@
         }).then(res => {
             name.value = ''
             department.value = ''
-            refreshNuxtData('positions')
+            refresh()
         }).catch(err => {
-            
             console.log(err)
         }).finally(() => {
             proccessing.value = false
@@ -127,7 +129,7 @@
 
 
     async function destroy(id) {
-        await $fetch("http://127.0.0.1:8000/api/positions/" + id, {
+        await $fetch(`${api}/positions/${id}`, {
             method: 'delete',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -135,21 +137,21 @@
             }
         }).then(res => {
             alert("deleted")
-            refreshNuxtData('positions')
+            refresh()
         }).catch(err => {
             alert(err.message)
         })
 
     }
-
+/* 
     function edit(id) {
 
-        const dep = departments.find((el) => {
+        const dep = data.data.positions.find((el) => {
             return el.id == id
         })
 
         name.value = dep.name
-    }
+    } */
 </script>
 
 <style scoped>

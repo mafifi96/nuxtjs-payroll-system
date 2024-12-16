@@ -34,12 +34,17 @@
                     <i class="fa fa-sign-in w-6 h-6 inline-block mr-1.5 -mt-1"></i>
                     <span>attendances</span></NuxtLink>
                 <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base  text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all text-xs"
-                    to="/employee">
+                    to="/employees">
                     <i class="fa fa-user-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
-                    <span>employee</span></NuxtLink>
+                    <span>employees</span></NuxtLink>
+                   <!--  <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base  text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all text-xs"
+                    to="/contracts">
+                    <i class="fa fa-handshake-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
+                    <span>contracts</span></NuxtLink> -->
+                    
                 <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
-                    to="/department">
-                    <i class="fa fa-users w-6 h-6 inline-block mr-1.5 -mt-1"></i>
+                    to="/departments">
+                    <i class="fa fa-building-o w-6 h-6 inline-block mr-1.5 -mt-1"></i>
                     <span >departments</span></NuxtLink>
                     <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/position">
@@ -50,10 +55,10 @@
                     to="/payrolls">
                     <i class="fa fa-credit-card w-6 h-6 inline-block mr-1.5 -mt-1"></i>
                     <span >payrolls</span></NuxtLink>
-                <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
+               <!--  <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/payslips">
                     <i class="fa fa-money w-6 h-6 inline-block mr-1.5 -mt-1"></i>                     
-                    <span >payslips</span></NuxtLink>
+                    <span >payslips</span></NuxtLink> -->
                 <NuxtLink class="capitalize block py-1 px-3 mb-1.5 font-semibold lg:text-lg md:text-base text-xs text-slate-200 hover:text-slate-50 rounded-md hover:bg-indigo-500 transition-all"
                     to="/settings">
                     <i class="fa fa-cogs w-6 h-6 inline-block mr-1.5 -mt-1"></i>
@@ -103,14 +108,10 @@
     </div>
     </template>
 <script setup>
-import {useStore} from '~~/store/Store'
+import {useStore} from '~~/store/store'
 
+const {logout} = useStore()
 
-async function logout()
-{
-   await useStore().logout()
-   
-}
 
 </script>
 

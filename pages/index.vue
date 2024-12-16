@@ -1,5 +1,4 @@
 <template>
-
     <Head>
         <Title>
             {{ title + ` | Login` }}
@@ -11,11 +10,10 @@
 
             <div class="container flex flex-1 p-4  items-center justify-center">
 
-
                 <div class="rounded w-96 h-auto bg-white shadow-xl border-2 border-gray-100 px-5 py-8">
-                    <h1 class="text-center capitalize tracking-wide text-lg font-semibold">welcome {{ user.name }}</h1>
+                    <!-- <h1 class="text-center capitalize tracking-wide text-lg font-semibold">welcome {{ user.name }}</h1> -->
 
-                    <h1 class="text-center capitalize tracking-wide text-lg font-semibold">login to your account</h1>
+                    <h1 class="text-center capitalize tracking-wide text-lg font-semibold">login</h1>
 
                     <div class="my-3 p-2 flex justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -26,7 +24,8 @@
                         </svg>
                     </div>
                     <div v-if="errors.length > 0" class="relative">
-                        <span @click="errors = []" class="absolute top-3 right-3 cursor-pointer "><i class="fa fa-close"></i></span>
+                        <span @click="errors = []" class="absolute top-3 right-3 cursor-pointer "><i
+                                class="fa fa-close"></i></span>
                         <Errors :errors="errors"></Errors>
                     </div>
                     <form @submit.prevent="login()">
@@ -45,7 +44,9 @@
                             </div>
                             <div class="text-center">
                                 <button type="submit" :disabled="proccessing"
-                                    class="bg-blue-500 block w-full text-white px-6 rounded tracking-wide capitalize py-2 hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 transition-all font-semibold">{{proccessing ? 'login...' : 'login'}}</button>
+                                    class="bg-blue-500 block w-full text-white px-6 rounded tracking-wide capitalize py-2 hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 transition-all font-semibold">{{
+                                        proccessing
+                                        ? 'login...' : 'login' }}</button>
                             </div>
                         </div>
                     </form>
@@ -56,61 +57,53 @@
     </div>
 </template>
 
-<script>
-    import {
-        useStore
-    } from '~~/store/Store'
+<script setup>
+import { useStore } from '~~/store/store'
+import { ref } from 'vue';
+import Errors from '~~/components/Errors.vue'
 
-    definePageMeta({
-        layout: 'default',
-        middleware : ['guest']
-    })
-    
-    import Errors from '~~/components/Errors.vue'
-    
-    export default {
-        
-        data() {
-            return {
-                title: useAppConfig().title,
-                user: useStore().user,
-                email: '',
-                password: '',
-                errors : [],
-                proccessing : false
-            }
+definePageMeta({
+    layout: 'default',
+    middleware: 'guest'
+})
+
+const {title,api,sanctumURL} = useAppConfig()
+const {user,signIn} = useStore()
+const email = ref('')
+const password = ref('')
+const errors = ref([])
+const proccessing = ref(false)
+
+const login = async () => {
+    proccessing.value = true
+
+    await $fetch(`${sanctumURL}/sanctum/csrf-cookie`, {
+        credentials: "include"
+    }) 
+
+    await $fetch(`${api}/login`, {
+        method: "post",
+        body: {
+            email: email.value,
+            password: password.value
         },
-        methods: {
+        credentials : 'include'
+    }).
+        then(res => {
 
-            async login() {
-                this.proccessing = true
-                
-                    await $fetch('http://127.0.0.1:8000/sanctum/csrf-cookie')
-                    
-                    await $fetch("http://127.0.0.1:8000/api/login", {
-                        method: "post",
-                        body: {
-                            email: this.email,
-                            password: this.password
-                        }
-                    }).
-                    then(res => {
-                        
-                        useStore().signIn(res.data.token)
+            signIn(res.data.token)
 
-                    }).catch(err => {
-                        
-                        this.errors.push(err.data.message)
-                    }).finally(()=>{
-                        this.proccessing = false
-                    })
+        }).catch(err => {
 
-            }
-        }
-    }
+            errors.value.push(err.data.message)
 
+        }).finally(() => {
+
+            proccessing.value = false
+
+        })
+
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

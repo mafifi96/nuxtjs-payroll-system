@@ -88,7 +88,8 @@
         useStore
     } from '~~/store/store'
 
-    const token = useStore().token
+    
+    const {token} = useStore()
     const name = ref('')
     const email = ref('')
     const phone = ref('')
@@ -125,15 +126,14 @@
 
     })
 
-    async function create() {
+    async function updatee() {
         proccessing.value = true
 
         await $fetch("http://127.0.0.1:8000/api/employees", {
             method: 'post',
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-type': 'application/json'
-
+                'Content-type': 'application/json',
             },
             body: {
                 name: name.value,
@@ -141,7 +141,8 @@
                 phone: phone.value,
                 status: status.value,
                 department_id: department.value,
-                position_id: position.value
+                position_id: position.value,
+                _method : 'PATCH'
             },
         }).then(res => {
             saved.value = true
