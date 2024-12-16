@@ -8,7 +8,7 @@
     <!--  <create-employee v-show="openModalCreate" @close="openModalCreate = false" />
     <edit-employee v-show="openModalEdit" @close="openModalEdit = false" :employee="id" :departments="departments" /> -->
 
-    <PageHeading>employees </PageHeading>
+    <PageHeading>employees</PageHeading>
     <div class="flex px-2 my-2 pb-5">
         <div class="w-full rounded-1 ">
             <div class="w-full flex justify-end items-center my-3  rounded-sm p-3">

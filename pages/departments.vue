@@ -1,41 +1,60 @@
 <template>
-<Head>
-    <Title>
-        {{ title + ` | Departments` }}
-    </Title>
-</Head>
+    <Head>
+        <Title>
+            {{ title + ` | Departments` }}
+        </Title>
+    </Head>
 
+    <PageHeading>departments </PageHeading>
+    <div class="flex px-2 my-2 pb-5">
+        <div class="w-full rounded-1 ">
+            <div class="w-full flex justify-end items-center my-3  rounded-sm p-3">
 
-<PageHeading>departments </PageHeading>
-<div class="flex lg:justify-between md:justify-between align-center">
-    <div class="w-full lg:w-[40%] md:w-[25%] bg-gray-100 shadow-md rounded rounded-1 mr-2">
-        <div class="px-2 py-4 font-md text-slate-500 border-b-2 capitalize">
-            <h2>create / edit new department</h2>
-        </div>
-        <div class="bg-white px-2 py-4">
-            <form>
-                <input type="text" class="my-2 border w-full p-2 rounded-sm border-zinc-200" v-model="name" placeholder="Name" required>
-                <textarea v-model="description" placeholder="Description" class="my-2 border w-full h-16 p-2 rounded-sm border-zinc-200" id="" cols="30" rows="10"></textarea>
-            </form>
-        </div>
-        <div class="px-2 py-4 border-t-2 flex justify-center items-center">
-            <button @click="create()" :disabled="proccessing" class="bg-blue-500 block w-auto text-white px-6 rounded tracking-wide capitalize py-2 hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 transition-all font-semibold">{{proccessing ? 'storing...' : 'create'}}</button>
+                <UButton icon="i-heroicons-plus" size="sm" color="primary" variant="solid" label="Create Department"
+                    :trailing="false" :loading="processing" @click="isOpen = true" />
+            </div>
 
-        </div>
-    </div>
-    <div class="w-full shadow-md rounded-sm p-3">
+            <div class="w-full shadow-md rounded-sm p-3">
                 <UTable :loading="status == 'pending'"
                     :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
                     :progress="{ color: 'primary', animation: 'carousel' }" class="w-full" :columns="columns"
                     :rows="data?.data">
-
+                    <template #actions-data="{ row }">
+                        <UDropdown :items="items(row)">
+                            <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                        </UDropdown>
+                    </template>
                 </UTable>
-                <UPagination v-if="data?.data.length" v-model="page"  :total="total" />
-
-              
+                <UPagination v-if="data?.data.length" v-model="page" :total="total" />
             </div>
 
-</div>
+        </div>
+    </div>
+
+    <UModal v-model="isOpen" prevent-close>
+        <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+            <template #header>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                        Create Department
+                    </h3>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpen = false" />
+                </div>
+            </template>
+            <form @submit.prevent>
+                <input type="text" :class="{'border-red-600' : nameError}" class="my-2 border w-full p-2 rounded-sm border-zinc-200" v-model="name"
+                    placeholder="Name" required>
+
+                <textarea :class="{'border-red-600' : descriptionError}"  v-model="description" placeholder="Description"
+                    class="my-2 border w-full h-16 p-2 rounded-sm border-zinc-200" id="" cols="30" rows="10"></textarea>
+            </form>
+
+            <template #footer>
+                <UButton @click="create()" :disabled="processing" :loading="processing">Create</UButton>
+            </template>
+        </UCard>
+    </UModal>
 </template>
 
 <script setup>
@@ -46,6 +65,7 @@ import {
 import {
     useStore
 } from '~/store/store'
+
 const {
     token
 } = useStore()
@@ -60,14 +80,17 @@ definePageMeta({
     middleware: 'auth'
 })
 
+const toast = useToast()
 const name = ref('')
 const description = ref('')
-const proccessing = ref(false)
-
+const processing = ref(false)
+const isOpen = ref(false)
+const nameError = ref(false)
+const descriptionError = ref(false)
 const columns = [
     {
         key: 'id',
-        label: '#',
+        label: 'ID',
 
     },
     {
@@ -88,11 +111,22 @@ const columns = [
         key: 'actions',
         label: 'Actions'
     },
-
-
 ]
-const page = ref(1)
 
+const items = row => [
+    [{
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        click: () => console.log('Edit', row.id)
+    }], [{
+        label: 'Delete',
+        icon: 'i-heroicons-trash-20-solid',
+        click: () => destroy(row.id)
+    }]
+]
+
+
+const page = ref(1)
 const {
     status,
     data,
@@ -112,29 +146,36 @@ const {
 const total = computed(() => data.value?.pagination.total)
 
 async function create() {
-    proccessing.value = true
 
-    await $fetch(`${api}/departments`, {
+    processing.value = true
+
+    const {error,data,refresh} = await useFetch(`${api}/departments`, {
         method: 'post',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-type': 'application/json'
         },
         body: {
-
             name: name.value,
             description: description.value
         }
-    }).then(res => {
+    })
+
+    processing.value = false
+
+    if(!error)
+    {
         name.value = ''
         description.value = ''
         refresh()
-
-    }).catch(err => {
-        //errors component
-    }).finally(() => {
-        proccessing.value = false
-    })
+        toast.add({ title: 'Department Created Successfully!' })
+    }else{
+        nameError.value = true
+        descriptionError.value = true
+        toast.add({ title: 'Faieled To Create Department',description : error?.value.data.message.name[0] || error?.value.data.message.description[0] , icon : 'i-heroicons-exclamation-triangle',color:'red'})
+    }
+    
+   
 
 }
 
@@ -163,6 +204,8 @@ const edit = (id) => {
     name.value = dep.name
 
 }
+
+
 </script>
 
 <style scoped>
